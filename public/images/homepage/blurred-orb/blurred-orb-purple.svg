@@ -1,0 +1,17 @@
+<svg width="1440" height="1200" viewBox="0 0 1440 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g filter="url(#blur-purple)">
+    <circle cx="720" cy="600" r="400" fill="url(#gradient-purple)" opacity="0.4"/>
+  </g>
+  <defs>
+    <filter id="blur-purple" x="-200" y="-200" width="1840" height="1600" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="120" result="effect1_foregroundBlur"/>
+    </filter>
+    <radialGradient id="gradient-purple" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(720 600) rotate(90) scale(400)">
+      <stop offset="0%" stop-color="#ac71cc"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#9333ea" stop-opacity="0.5"/>
+    </radialGradient>
+  </defs>
+</svg>
