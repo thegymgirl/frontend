@@ -25,7 +25,7 @@ export default function SuccessPage() {
 
         {/* Main Headline - Single line AND centered */}
         <div className="mb-6 text-center">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold inline-block" style={{ whiteSpace: 'nowrap' }}>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold">
             Welcome to StrongVampirex Coaching! 🎉
           </h1>
         </div>
@@ -81,7 +81,7 @@ export default function SuccessPage() {
 
         {/* Important Reminder */}
         <div className="bg-[#DC143C]/10 border border-[#DC143C]/30 rounded-xl p-6 mb-12">
-          <div className="text-2xl mb-2">📱</div>
+          <div className="text-2xl mb-2">Notice</div>
           <p className="text-lg font-bold mb-2">All coaching happens via text</p>
           <p className="text-gray-400 text-sm">
             No apps to download. Just simple SMS coaching that fits your life.
@@ -99,7 +99,7 @@ export default function SuccessPage() {
         {/* Final Message */}
         <div className="mt-12 pt-8 border-t border-gray-800">
           <p className="text-2xl font-bold text-[#DC143C]">
-            Let's get you the body you've always wanted. 💪
+            Let's get you the body you've always wanted.
           </p>
         </div>
       </div>

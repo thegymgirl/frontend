@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const API_URL = 'https://backend-production-a4994.up.railway.app'
-
+// const API_URL = 'https://backend-production-a4994.up.railway.app'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-production-a4994.up.railway.app'
 export default function SignupPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -14,7 +14,8 @@ export default function SignupPage() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    countryCode: '+1'
   })
 
   const handleChange = (e) => {
@@ -45,26 +46,50 @@ export default function SignupPage() {
 
     // Validate phone (basic)
     const phoneDigits = formData.phone.replace(/\D/g, '')
-    if (phoneDigits.length !== 10) {
-      setError('Please enter a valid 10-digit phone number')
+    if (phoneDigits.length < 7 || phoneDigits.length > 15) {
+      setError('Please enter a valid phone number')
       setLoading(false)
       return
     }
 
+    const fullPhone = `${formData.countryCode}${phoneDigits}`
+
     try {
+      // Get quiz answers from localStorage
+      const quizAnswersRaw = localStorage.getItem('quizAnswers')
+      console.log('🔍 Raw Quiz Answers from LocalStorage:', quizAnswersRaw)
+      
+      const quizAnswers = quizAnswersRaw ? JSON.parse(quizAnswersRaw) : {}
+      console.log('📋 Parsed Quiz Answers:', quizAnswers)
+
+      const payload = {
+        email: formData.email,
+        phone: fullPhone,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        tier: 'founding',
+        quiz_data: {
+          goal: quizAnswers.goal,
+          gender_identity: quizAnswers.gender,
+          experience_level: quizAnswers.experience,
+          training_frequency: quizAnswers.frequency,
+          equipment_access: quizAnswers.equipment,
+          physique_category: quizAnswers.physique,
+          injuries: quizAnswers.injuries,
+          current_weight: quizAnswers.weight,
+          target_weight: quizAnswers.weight
+        }
+      }
+      
+      console.log('🚀 Sending Payload to Backend:', payload)
+
       // Create checkout session
       const response = await fetch(`${API_URL}/api/create-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email,
-          phone: `+1${phoneDigits}`, // Add country code
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          tier: 'founding'
-        })
+        body: JSON.stringify(payload)
       })
 
       if (!response.ok) {
@@ -76,7 +101,7 @@ export default function SignupPage() {
       // Save user data to localStorage
       localStorage.setItem('pendingSignup', JSON.stringify({
         ...formData,
-        phone: `+1${phoneDigits}`
+        phone: fullPhone
       }))
 
       // Redirect to Stripe checkout
@@ -154,15 +179,33 @@ export default function SignupPage() {
 
           <div>
             <label className="block text-sm font-medium mb-2">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-800 focus:border-[#DC143C] focus:outline-none"
-              placeholder="(555) 123-4567"
-              required
-            />
+            <div className="flex gap-2">
+              <select
+                name="countryCode"
+                value={formData.countryCode}
+                onChange={handleChange}
+                className="w-32 px-2 py-3 rounded-lg bg-gray-900 border border-gray-800 focus:border-[#DC143C] focus:outline-none appearance-none cursor-pointer"
+              >
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+1">🇨🇦 +1</option>
+                <option value="+92">🇵🇰 +92</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+966">🇸🇦 +966</option>
+                <option value="+353">🇮🇪 +353</option>
+                <option value="+64">🇳🇿 +64</option>
+              </select>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="flex-1 px-4 py-3 rounded-lg bg-gray-900 border border-gray-800 focus:border-[#DC143C] focus:outline-none"
+                placeholder="(555) 123-4567"
+                required
+              />
+            </div>
             <p className="text-sm text-gray-500 mt-2">
               We'll text you your program and check-ins here
             </p>

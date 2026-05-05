@@ -18,37 +18,8 @@ export default function PreviewPage() {
     }
   }, [router])
 
-  const handleStartNow = async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const response = await fetch(`${API_URL}/api/create-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: '',
-          phone: '',
-          first_name: '',
-          last_name: '',
-          tier: 'founding'
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session')
-      }
-
-      const data = await response.json()
-      window.location.href = data.checkout_url
-
-    } catch (err) {
-      console.error('Checkout error:', err)
-      setError('Something went wrong. Please try again.')
-      setLoading(false)
-    }
+  const handleStartNow = () => {
+    router.push('/signup')
   }
 
   return (
